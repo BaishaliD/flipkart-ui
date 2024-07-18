@@ -2,12 +2,22 @@ import "./ChatList.css";
 import { formatDate } from "../../utils";
 import { useEffect, useState } from "react";
 
-const ChatList = ({ chats, handleSelectChat }) => {
+const ChatList = ({ chats, handleSelectChat, filter }) => {
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    filter(search);
+  }, [search]);
+
   return (
     <div className="chat-list">
       <div className="chat-list-header">
         <h2>Filter by Title / Order ID</h2>
-        <input type="text" placeholder="Start typing to search" />
+        <input
+          type="text"
+          placeholder="Start typing to search"
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
       {chats.map((chat) => (
         <div

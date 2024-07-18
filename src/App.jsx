@@ -6,9 +6,21 @@ import ChatView from "./components/ChatView/ChatView";
 function App() {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [filteredChats, setFilteredChats] = useState([]);
 
   const handleSelectChat = (chat) => {
     setSelectedChat(chat);
+  };
+
+  const filter = (query) => {
+    console.log("Search...");
+    setFilteredChats(
+      chats.filter(
+        (item) =>
+          item?.title?.toLowerCase().includes(query?.toLowerCase()) ||
+          item?.orderId?.toLowerCase().includes(query?.toLowerCase())
+      )
+    );
   };
 
   useEffect(() => {
@@ -16,6 +28,7 @@ function App() {
       .then((res) => res.json())
       .then((data) => {
         setChats(data);
+        setFilteredChats(data);
         localStorage.setItem("chats", JSON.stringify(data));
       });
   }, []);
@@ -26,7 +39,11 @@ function App() {
 
   return (
     <div className="app">
-      <ChatList chats={chats} handleSelectChat={handleSelectChat} />
+      <ChatList
+        chats={filteredChats}
+        handleSelectChat={handleSelectChat}
+        filter={filter}
+      />
       {selectedChat && <ChatView selectedChat={selectedChat} />}
     </div>
   );
